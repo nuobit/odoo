@@ -56,6 +56,13 @@ class ImBus(osv.Model):
             if random.random() < 0.01:
                 self.gc(cr, uid)
         if channels:
+            wf = openerp.tools.config.get('webfaction', default=False) 
+            if wf:
+                db_base = openerp.tools.config["webfaction_db_base"]
+                with openerp.sql_db.db_connect(db_base).cursor() as cr2:
+                    cr2.execute("notify imbus, %s", (json_dump(list(channels)),))
+                return
+
             with openerp.sql_db.db_connect('postgres').cursor() as cr2:
                 cr2.execute("notify imbus, %s", (json_dump(list(channels)),))
 
@@ -110,6 +117,31 @@ class ImDispatch(object):
 
     def loop(self):
         """ Dispatch postgres notifications to the relevant polling threads/greenlets """
+        
+        wf = openerp.tools.config.get('webfaction', default=False) 
+        if wf:
+            db_base = openerp.tools.config["webfaction_db_base"]
+            _logger.info("Bus.loop listen imbus on db %s" % db_base)        
+            with openerp.sql_db.db_connect(db_base).cursor() as cr:
+                conn = cr._cnx
+                cr.execute("listen imbus")
+                cr.commit();
+                while True:
+                    if select.select([conn], [], [], TIMEOUT) == ([],[],[]):
+                        pass
+                    else:
+                        conn.poll()
+                        channels = []
+                        while conn.notifies:
+                            channels.extend(json.loads(conn.notifies.pop().payload))
+                        # dispatch to local threads/greenlets
+                        events = set()
+                        for c in channels:
+                            events.update(self.channels.pop(hashable(c),[]))
+                        for e in events:
+                            e.set()
+            return
+        
         _logger.info("Bus.loop listen imbus on db postgres")
         with openerp.sql_db.db_connect('postgres').cursor() as cr:
             conn = cr._cnx
