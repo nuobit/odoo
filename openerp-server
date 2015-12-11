@@ -2,6 +2,11 @@
 import openerp
 
 if __name__ == "__main__":
+    import sys
+    sys.path.append('/home/eantones/opt/pycharm-5.0.1/debug-eggs/pycharm-debug.egg')
+    import pydevd
+    pydevd.settrace('localhost', port=56507, stdoutToServer=True, stderrToServer=True)
+
     openerp.cli.main()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
