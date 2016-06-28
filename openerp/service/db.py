@@ -368,8 +368,9 @@ def exec_webfaction_sql(db_base, db_user, sql, params=()):
             # The next use of regular expressions is just a temporary solution. It's dirty, unelegant, unstable but fast to implement, really fast.
             # Of course, it needs to be corrected ASAP and implement an elegant solution.
             import re
-            m = re.search('^FATAL:  no pg_hba.conf entry for host "[0-9.]+", user "%(db_user)s", database "%(db_base)s", SSL on\nFATAL:  no pg_hba.conf entry for host "[0-9.]+", user "%(db_user)s", database "%(db_base)s", SSL off\n$' % dict(db_user=db_user, db_base=db_base), unicode(e))
-            if m is None:
+            m1 = re.search('^FATAL:  no pg_hba.conf entry for host "[0-9.]+", user "%(db_user)s", database "%(db_base)s", SSL on\nFATAL:  no pg_hba.conf entry for host "[0-9.]+", user "%(db_user)s", database "%(db_base)s", SSL off\n$' % dict(db_user=db_user, db_base=db_base), unicode(e))
+            m2 = re.search('^FATAL:  no pg_hba.conf entry for host "\[local\]", user "%(db_user)s", database "%(db_base)s", SSL off\n$' % dict(db_user=db_user, db_base=db_base), unicode(e))
+            if m1 is None and m2 is None:
                 m = re.search('^FATAL:  permission denied for database "%s"\nDETAIL:  User does not have CONNECT privilege.$' % db_base, unicode(e))
                 if m is not None:
                     _logger.info('WebFaction: Base database "%s" already created but user "%s" has no permissions -> Granting full access...' % (db_base, db_user))
