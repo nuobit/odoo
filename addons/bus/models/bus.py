@@ -61,6 +61,13 @@ class ImBus(models.Model):
             # transaction is not commited yet, there will be nothing to fetch,
             # and the longpolling will return no notification.
             def notify():
+                wf = openerp.tools.config.get('webfaction', default=False) 
+                if wf:
+                    db_base = openerp.tools.config["webfaction_db_base"]
+                    with openerp.sql_db.db_connect(db_base).cursor() as cr2:
+                        cr2.execute("notify imbus, %s", (json_dump(list(channels)),))
+                    return
+
                 with openerp.sql_db.db_connect('postgres').cursor() as cr:
                     cr.execute("notify imbus, %s", (json_dump(list(channels)),))
             self._cr.after('commit', notify)
@@ -143,6 +150,29 @@ class ImDispatch(object):
     def loop(self):
         """ Dispatch postgres notifications to the relevant polling threads/greenlets """
         _logger.info("Bus.loop listen imbus on db postgres")
+        wf = openerp.tools.config.get('webfaction', default=False) 
+        if wf:
+            db_base = openerp.tools.config["webfaction_db_base"]
+            with openerp.sql_db.db_connect(db_base).cursor() as cr:
+                conn = cr._cnx
+                cr.execute("listen imbus")
+                cr.commit();
+                while True:
+                    if select.select([conn], [], [], TIMEOUT) == ([], [], []):
+                        pass
+                    else:
+                        conn.poll()
+                        channels = []
+                        while conn.notifies:
+                            channels.extend(json.loads(conn.notifies.pop().payload))
+                        # dispatch to local threads/greenlets
+                        events = set()
+                        for channel in channels:
+                            events.update(self.channels.pop(hashable(channel), []))
+                        for event in events:
+                            event.set()
+            return
+                
         with openerp.sql_db.db_connect('postgres').cursor() as cr:
             conn = cr._cnx
             cr.execute("listen imbus")
