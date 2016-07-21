@@ -629,9 +629,9 @@ class account_invoice(models.Model):
         line_ids = self.move_line_id_payment_get()
         if not line_ids:
             return False
-        query = "SELECT reconcile_id FROM account_move_line WHERE id IN %s"
+        query = "SELECT count(*) FROM account_move_line WHERE reconcile_id IS NULL AND id IN %s"
         self._cr.execute(query, (tuple(line_ids),))
-        return all(row[0] for row in self._cr.fetchall())
+        return self._cr.fetchone()[0] == 0
 
     @api.multi
     def button_reset_taxes(self):
@@ -779,7 +779,11 @@ class account_invoice(models.Model):
                     line2[tmp]['debit'] = (am > 0) and am or 0.0
                     line2[tmp]['credit'] = (am < 0) and -am or 0.0
                     line2[tmp]['tax_amount'] += l['tax_amount']
+                    line2[tmp]['amount_currency'] += l['amount_currency']
                     line2[tmp]['analytic_lines'] += l['analytic_lines']
+                    qty = l.get('quantity')
+                    if qty:
+                        line2[tmp]['quantity'] = line2[tmp].get('quantity', 0.0) + qty
                 else:
                     line2[tmp] = l
             line = []
@@ -815,7 +819,7 @@ class account_invoice(models.Model):
             inv.check_tax_lines(compute_taxes)
 
             # I disabled the check_total feature
-            if self.env['res.users'].has_group('account.group_supplier_inv_check_total'):
+            if self.env.user.has_group('account.group_supplier_inv_check_total'):
                 if inv.type in ('in_invoice', 'in_refund') and abs(inv.check_total - inv.amount_total) >= (inv.currency_id.rounding / 2.0):
                     raise except_orm(_('Bad Total!'), _('Please verify the price of the invoice!\nThe encoded total does not match the computed total.'))
 
@@ -1209,7 +1213,7 @@ class account_invoice(models.Model):
     def pay_and_reconcile(self, cr, uid, ids, pay_amount, pay_account_id, period_id, pay_journal_id,
                           writeoff_acc_id, writeoff_period_id, writeoff_journal_id, context=None, name=''):
         recs = self.browse(cr, uid, ids, context)
-        return recs.pay_and_reconcile(pay_amount, pay_account_id, period_id, pay_journal_id,
+        return account_invoice.pay_and_reconcile(recs, pay_amount, pay_account_id, period_id, pay_journal_id,
                     writeoff_acc_id, writeoff_period_id, writeoff_journal_id, name=name)
 
 class account_invoice_line(models.Model):
@@ -1282,7 +1286,7 @@ class account_invoice_line(models.Model):
         default=0.0)
     invoice_line_tax_id = fields.Many2many('account.tax',
         'account_invoice_line_tax', 'invoice_line_id', 'tax_id',
-        string='Taxes', domain=[('parent_id', '=', False)])
+        string='Taxes', domain=[('parent_id', '=', False), '|', ('active', '=', False), ('active', '=', True)])
     account_analytic_id = fields.Many2one('account.analytic.account',
         string='Analytic Account')
     company_id = fields.Many2one('res.company', string='Company',
@@ -1600,7 +1604,7 @@ class account_invoice_tax(models.Model):
     def compute(self, cr, uid, invoice_id, context=None):
         recs = self.browse(cr, uid, [], context)
         invoice = recs.env['account.invoice'].browse(invoice_id)
-        return recs.compute(invoice)
+        return account_invoice_tax.compute(recs, invoice)
 
     @api.model
     def move_line_get(self, invoice_id):
