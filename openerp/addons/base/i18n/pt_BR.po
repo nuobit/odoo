@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-19 06:31+0000\n"
-"PO-Revision-Date: 2016-07-18 14:11+0000\n"
+"PO-Revision-Date: 2016-08-01 13:32+0000\n"
 "Last-Translator: grazziano <g.negocios@outlook.com.br>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-8/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -2630,7 +2630,7 @@ msgid ""
 "\n"
 "Print product labels with barcode.\n"
 "    "
-msgstr "\nEste é o módulo de base para a gestão de produtos e listas de preços no Odoo.\n================================================== ======================\n\nProdutos podem ter variantes, métodos de preços diferentes, informações de fornecedores,\naquisição do estoque / no pedido, diferentes unidades de medidas, embalagem e propriedades.\n\nListas de Preços permitem:\n-------------------\n     * Vários níveis de desconto (por produto, categoria, quantidades)\n     * Cálculo de preço com base em diferentes critérios:\n         * Outra Lista de Preços\n         * Preço de custo\n         * Lista de preços\n         * Preço de Fornecedor\n\nLista de preço preferida por produtos e / ou parceiros.\n\nImprimir etiquetas de produtos com código de barras.\n    "
+msgstr "\nEste é o módulo de base para a gestão de produtos e listas de preços no Odoo.\n================================================== ======================\n\nProdutos podem ter variantes, métodos de preços diferentes, informações de fornecedores,\naquisição do estoque / no pedido, diferentes unidades de medidas, empacotamento e propriedades.\n\nListas de Preços permitem:\n-------------------\n     * Vários níveis de desconto (por produto, categoria, quantidades)\n     * Cálculo de preço com base em diferentes critérios:\n         * Outra Lista de Preços\n         * Preço de custo\n         * Lista de preços\n         * Preço de Fornecedor\n\nLista de preço preferida por produtos e / ou parceiros.\n\nImprimir etiquetas de produtos com código de barras.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be
@@ -4205,7 +4205,7 @@ msgid ""
 "                documents, etc.\n"
 "              </p>\n"
 "            "
-msgstr "<p class =\"oe_view_nocontent_create\">\nClique para adicionar um contato no catálogo de endereços.\n</p> <p>\nOdoo ajuda você a facilmente acompanahr todas as atividades relacionadas a\num cliente; discussões, histórico de oportunidades de negócio,\ndocumentos, etc.\n</p>"
+msgstr "<p class =\"oe_view_nocontent_create\">\nClique para adicionar um contato no catálogo de endereços.\n</p> <p>\nOdoo ajuda você a facilmente acompanhar todas as atividades relacionadas a\num cliente; discussões, histórico de oportunidades de negócio,\ndocumentos, etc.\n</p>"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_partner_supplier_form
@@ -14380,7 +14380,7 @@ msgstr "Esta tarefa do cron está sendo executada e não pode ser modificada, po
 msgid ""
 "This field holds the image used as avatar for this contact, limited to "
 "1024x1024px"
-msgstr "Esta área possui a imagem usada como avatar para este contato, limitado a 1024x1024px"
+msgstr "Esta área contém a imagem usada como avatar para este contato, limitado a 1024x1024px."
 
 #. module: base
 #: help:res.lang,code:0
