@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-01 06:27+0000\n"
-"PO-Revision-Date: 2016-05-10 16:41+0000\n"
+"PO-Revision-Date: 2016-09-14 05:15+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -202,7 +202,7 @@ msgstr ""
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "<strong>Requirements:</strong>"
-msgstr ""
+msgstr "المتطلبات:"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -1816,12 +1816,12 @@ msgstr "تنبيه: لم يصل هذا المشروع لحد التسجيل ال
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "رسائل الموقع"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "سجل تواصل الموقع"
 
 #. module: event
 #: selection:event.mail,interval_unit:0
