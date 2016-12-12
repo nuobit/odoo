@@ -922,15 +922,15 @@ class Field(object):
         for field in fields:
             for record in records:
                 record._cache[field] = field.convert_to_cache(False, record, validate=False)
-        with records.env.protecting(fields, records):
-            if isinstance(self.compute, basestring):
-                getattr(records, self.compute)()
-            else:
-                self.compute(records)
+        if isinstance(self.compute, basestring):
+            getattr(records, self.compute)()
+        else:
+            self.compute(records)
 
     def compute_value(self, records):
         """ Invoke the compute method on ``records``; the results are in cache. """
-        with records.env.do_in_draft():
+        fields = records._field_computed[self]
+        with records.env.do_in_draft(), records.env.protecting(fields, records):
             try:
                 self._compute_value(records)
             except (AccessError, MissingError):
@@ -986,7 +986,9 @@ class Field(object):
     def determine_draft_value(self, record):
         """ Determine the value of ``self`` for the given draft ``record``. """
         if self.compute:
-            self._compute_value(record)
+            fields = record._field_computed[self]
+            with record.env.protecting(fields, record):
+                self._compute_value(record)
         else:
             null = self.convert_to_cache(False, record, validate=False)
             record._cache[self] = SpecialValue(null)
