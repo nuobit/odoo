@@ -1528,7 +1528,7 @@ msgstr "Adresa"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_tax_id
 msgid "Adjustment Tax"
-msgstr "Adjustment Tax"
+msgstr "Prilagodba poreza"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_form
@@ -2088,7 +2088,7 @@ msgstr "RN"
 #. module: account
 #: selection:res.partner,trust:0
 msgid "Bad Debtor"
-msgstr ""
+msgstr "Loš dužnik"
 
 #. module: account
 #: selection:account.payment.term.line,value:0
@@ -2550,7 +2550,7 @@ msgstr "Prefiks gotovinskih računa"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_cash_account_code_prefix
 msgid "Cash Accounts Prefix *"
-msgstr ""
+msgstr "Prefiks konta gotovine"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:203
@@ -4630,7 +4630,7 @@ msgstr "Idi na ploču za konfiguriranje"
 #. module: account
 #: selection:res.partner,trust:0
 msgid "Good Debtor"
-msgstr ""
+msgstr "Dobar dužnik"
 
 #. module: account
 #. openerp-web
@@ -5277,6 +5277,7 @@ msgstr ""
 msgid ""
 "Invoice must be in draft,Pro-forma or open state in order to be cancelled."
 msgstr ""
+"Račun mora biti u nacrtu ili pro-forma statusu kako bi ga mogli otkazati."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:581
@@ -5288,7 +5289,7 @@ msgstr "Račun mora biti plaćen kako bi za njega mogli registrirati plaćanje."
 #: code:addons/account/models/account_invoice.py:573
 #, python-format
 msgid "Invoice must be validated in order to set it to register payemnt."
-msgstr ""
+msgstr "Račun mora biti potvrđen kako bi mogli registrirati plaćanje."
 
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_paid
@@ -5564,7 +5565,7 @@ msgstr "Temeljnica"
 #: model:ir.model.fields,field_description:account.field_account_invoice_move_name
 #: model:ir.model.fields,field_description:account.field_account_payment_move_name
 msgid "Journal Entry Name"
-msgstr ""
+msgstr "Naziv stavke dnevnika"
 
 #. module: account
 #: selection:account.print.journal,sort_selection:0
@@ -6082,7 +6083,7 @@ msgstr "Glavna valuta kompanije"
 #: model:ir.actions.act_window,name:account.tax_adjustments_form
 #: model:ir.ui.menu,name:account.menu_action_tax_adjustment
 msgid "Make Manual Tax Adjustments"
-msgstr ""
+msgstr "Napravi ručnu prilagodbu poreza"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -6134,7 +6135,7 @@ msgstr "Ručni porezi računa"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_manual_reconciliation
 msgid "Manual Payments & Invoices Matching"
-msgstr ""
+msgstr "Ručno zatvaranje izvoda"
 
 #. module: account
 #: model:ir.actions.client,name:account.action_manual_reconciliation
@@ -6232,7 +6233,7 @@ msgstr "Poruka za račun"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Minus Cost of Revenue"
-msgstr ""
+msgstr "Minus trošak prihoda"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -6503,7 +6504,7 @@ msgstr "Ništa"
 #. module: account
 #: selection:res.partner,trust:0
 msgid "Normal Debtor"
-msgstr ""
+msgstr "Normalni dužnik"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -7106,7 +7107,7 @@ msgstr "Razlika plaćanja"
 #: model:ir.model.fields,field_description:account.field_account_payment_journal_id
 #: model:ir.model.fields,field_description:account.field_account_register_payments_journal_id
 msgid "Payment Journal"
-msgstr ""
+msgstr "Dnevnik partnera"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
@@ -7352,7 +7353,7 @@ msgstr "Molimo kreirajte stavke računa."
 #: code:addons/account/models/account_move.py:140
 #, python-format
 msgid "Please define a sequence for the refunds"
-msgstr ""
+msgstr "Molimo definirajte brojevni krug za povrate"
 
 #. module: account
 #: code:addons/account/models/account_move.py:141
@@ -8668,7 +8669,7 @@ msgstr "Opis poreza"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Tax Excluded Price"
-msgstr ""
+msgstr "Cijena bez poreza"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_tax_group_id
