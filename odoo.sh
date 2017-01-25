@@ -28,7 +28,7 @@ start() {
         echo "Already running."
         RETVAL=99
     else
-        if [ $# -eq 3 ]; then
+        if [ $# -eq 2 ]; then
             echo "Update requested, $APPNAME started in foreground"
             $ODOO_CMD $2 $3
         else
