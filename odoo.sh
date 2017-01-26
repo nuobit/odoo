@@ -4,11 +4,15 @@ APPNAME="Odoo"
 
 SCRIPT_FILENAME=${0##*/}
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
-PYTHON_ENV="$SCRIPT_DIR/../pyvenv"
-
 ODOO_DIR="$SCRIPT_DIR"
-PIDFILE="$ODOO_DIR/../odoo.pid"
+
+BASE_DIR="$ODOO_DIR/.."
+
+PYTHON_ENV="$BASE_DIR/pyvenv"
+
+PIDFILE="$BASE_DIR/odoo.pid"
+LOG_DIR="$BASE_DIR/log"
+LOGERRFILE="$LOG_DIR/error.log"
 
 ODOO_CMD="$PYTHON_ENV/bin/python $ODOO_DIR/odoo.py --config=$ODOO_DIR/openerp-server.conf"
 
@@ -32,7 +36,7 @@ start() {
             echo "Update requested, $APPNAME started in foreground"
             $ODOO_CMD $2 $3
         else
-            $ODOO_CMD &
+            $ODOO_CMD 2>>"$LOGERRFILE" &
             echo "Started."
         fi
         RETVAL=0
@@ -49,7 +53,7 @@ stop() {
             killproc $signal $PID
             while killproc -0 $PID; do
                 sleep 1
-            done      
+            done
             echo "Stopped."
             RETVAL=0
         else
@@ -77,7 +81,7 @@ status() {
     fi
     RETVAL=0
     return $RETVAL
-    
+
 }
 
 usage() {
@@ -128,4 +132,3 @@ case "$1" in
         ;;
 esac
 exit $RETVAL
-
