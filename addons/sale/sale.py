@@ -29,7 +29,13 @@ class SaleOrder(models.Model):
             amount_untaxed = amount_tax = 0.0
             for line in order.order_line:
                 amount_untaxed += line.price_subtotal
-                amount_tax += line.price_tax
+                # FORWARDPORT UP TO 10.0
+                if order.company_id.tax_calculation_rounding_method == 'round_globally':
+                    price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
+                    taxes = line.tax_id.compute_all(price, line.order_id.currency_id, line.product_uom_qty, product=line.product_id, partner=line.order_id.partner_id)
+                    amount_tax += sum(t.get('amount', 0.0) for t in taxes.get('taxes', []))
+                else:
+                    amount_tax += line.price_tax
             order.update({
                 'amount_untaxed': order.pricelist_id.currency_id.round(amount_untaxed),
                 'amount_tax': order.pricelist_id.currency_id.round(amount_tax),
@@ -51,7 +57,7 @@ class SaleOrder(models.Model):
         refund is not directly linked to the SO.
         """
         for order in self:
-            invoice_ids = order.order_line.mapped('invoice_lines').mapped('invoice_id')
+            invoice_ids = order.order_line.mapped('invoice_lines').mapped('invoice_id').filtered(lambda r: r.type in ['out_invoice', 'out_refund'])
             # Search for invoices which have been 'cancelled' (filter_refund = 'modify' in
             # 'account.invoice.refund')
             # use like as origin may contains multiple references (e.g. 'SO01, SO02')
@@ -602,6 +608,10 @@ class SaleOrderLine(models.Model):
     @api.model
     def _get_analytic_track_service(self):
         return []
+
+    @api.model
+    def _get_purchase_price(self, pricelist, product, product_uom, date):
+        return {}
 
     @api.model
     def create(self, values):
