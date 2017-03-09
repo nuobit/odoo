@@ -14,7 +14,7 @@ PIDFILE="$BASE_DIR/odoo.pid"
 LOG_DIR="$BASE_DIR/log"
 LOGERRFILE="$LOG_DIR/error.log"
 
-ODOO_CMD="$PYTHON_ENV/bin/python $ODOO_DIR/odoo.py --config=$ODOO_DIR/odoo-server.conf"
+ODOO_CMD="$PYTHON_ENV/bin/python $ODOO_DIR/odoo-bin --config=$ODOO_DIR/odoo-server.conf"
 
 
 killproc() {
