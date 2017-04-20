@@ -13,6 +13,7 @@ PYTHON_ENV="$BASE_DIR/pyvenv"
 PIDFILE="$BASE_DIR/odoo.pid"
 LOG_DIR="$BASE_DIR/log"
 LOGERRFILE="$LOG_DIR/error.log"
+LOGOUTFILE="$LOG_DIR/out.log"
 
 ODOO_CMD="$PYTHON_ENV/bin/python $ODOO_DIR/odoo.py --config=$ODOO_DIR/openerp-server.conf"
 
@@ -36,7 +37,7 @@ start() {
             echo "Update requested, $APPNAME started in foreground"
             $ODOO_CMD $2 $3
         else
-            $ODOO_CMD 2>>"$LOGERRFILE" &
+            $ODOO_CMD 1>>"$LOGOUTFILE" 2>>"$LOGERRFILE" &
             echo "Started."
         fi
         RETVAL=0
