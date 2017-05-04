@@ -1782,8 +1782,8 @@ msgstr "Geen varianten op producten"
 msgid ""
 "No workorder currently in progress. Click to mark work center as blocked."
 msgstr ""
-"Er zijn geen werkorders zijn in behandeling. Klik om de werkplek als "
-"geblokkeerd te markeren."
+"Er zijn geen werkorders in behandeling. Klik om de werkplek als geblokkeerd "
+"te markeren."
 
 #. module: mrp
 #: selection:mrp.production,availability:0
@@ -3114,8 +3114,8 @@ msgid ""
 "                check the details in new worksheet)"
 msgstr ""
 "Gebruik berichten om productie of magazijn medewerkers te waarschuwen over "
-"eventuele veranderingen in de producten, processen, of acties (Bijv; "
-"Waarschuwing, de materiaallijst is veranderd, controleer de details van uw "
+"eventuele wijzigingen in de producten, processen, of acties (Bijv; "
+"Waarschuwing, de materiaallijst is gewijzigd, controleer de details van uw "
 "werk opdracht)."
 
 #. module: mrp
@@ -3492,12 +3492,25 @@ msgstr ""
 "Sluit of annuleer deze eerst."
 
 #. module: mrp
-#: code:addons/mrp/models/stock_move.py:123
+#: code:addons/mrp/models/stock_move.py:40
+#, python-format
+msgid "You can only produce 1.0 %s for products with unique serial number."
+msgstr "Je kunt maar 1.0 %s van product produceren met een uniek serienummer."
+
+#. module: mrp
+#: code:addons/mrp/models/stock_move.py:135
 #, python-format
 msgid "You cannot cancel a move move having already consumed material"
 msgstr ""
 "Het is niet mogelijk een voorraadmutatie te annuleren welke reeds "
 "grondstoffen heeft verbuikt"
+
+#. module: mrp
+#: code:addons/mrp/models/stock_move.py:40
+#, python-format
+msgid "You cannot use the same serial number in two different lines."
+msgstr ""
+"Het is niet toegestaan om hetzelfde serienummer te gebruiken op twee regels"
 
 #. module: mrp
 #: code:addons/mrp/wizard/change_production_qty.py:44

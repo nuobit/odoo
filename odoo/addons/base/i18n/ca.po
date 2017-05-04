@@ -1063,6 +1063,10 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Pla de comptes i localització d'impostos xilens.\n"
+"=============================================\n"
+"Pla comptable Xile i impostos d'acord amb les disposicions vigents"
 
 #. module: base
 #: model:ir.module.module,description:base.module_decimal_precision
@@ -1071,6 +1075,9 @@ msgid ""
 "Configure the price accuracy you need for different kinds of usage: accounting, sales, purchases.\n"
 "=================================================================================================\n"
 msgstr ""
+"\n"
+"Configura la precisió de preus que necessita per diferents tipus d'ús: comptabilitat, vendes, compres.\n"
+"=================================================================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_survey
@@ -5793,9 +5800,8 @@ msgstr "No es pot duplicar la configuració!"
 #. module: base
 #: code:addons/base/ir/ir_model.py:549
 #, python-format
-msgid "Cannot rename field to %s, because that field already exists!"
+msgid "Cannot rename/delete fields that are still present in views:"
 msgstr ""
-"No es pot re-nombrar el camp cap a %s, per que aquest camp ja existeix! "
 
 #. module: base
 #: code:addons/base/res/res_lang.py:219
@@ -8355,6 +8361,19 @@ msgstr "Camp de Tipus"
 #, python-format
 msgid "Field `%(field_name)s` does not exist"
 msgstr "El camp `%(field_name)s` no existeix"
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:298
+#, python-format
+msgid ""
+"Field names can only contain characters, digits and underscores (up to 63)."
+msgstr ""
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:307
+#, python-format
+msgid "Field names must be unique per model."
+msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_fields

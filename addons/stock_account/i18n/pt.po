@@ -42,14 +42,14 @@ msgstr "Informação contabilística"
 msgid ""
 "Allows to configure inventory valuations on products and product categories."
 msgstr ""
-"Permite configurar avaliação de inventário sobre produtos e categorias de "
-"produtos."
+"Permite configurar as avaliações do inventário sobre produtos e categorias "
+"de produtos."
 
 #. module: stock_account
 #: selection:product.category,property_cost_method:0
 #: selection:product.template,property_cost_method:0
 msgid "Average Price"
-msgstr "Preço médio"
+msgstr "Preço Médio"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -135,7 +135,7 @@ msgstr "Custo"
 #: model:ir.model.fields,field_description:stock_account.field_product_product_cost_method
 #: model:ir.model.fields,field_description:stock_account.field_product_template_cost_method
 msgid "Cost method"
-msgstr ""
+msgstr "Método de custo"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_cost_method
