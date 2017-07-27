@@ -199,6 +199,11 @@ msgid "Analytic Account"
 msgstr "Kostenplaats"
 
 #. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense_account_id
+msgid "An expense account is expected"
+msgstr "Een kostenrekening is verwacht"
+
+#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_configuration
 msgid "Apply"
 msgstr "Toepassen"
@@ -1405,6 +1410,7 @@ msgstr "U kan een geboekte declaratie niet verwijderen."
 msgid ""
 "You cannot have a positive and negative amounts on the same expense report."
 msgstr ""
+"Een debet en credit bedrag mogen niet op hetzelfde declaratie rapport staan."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:106

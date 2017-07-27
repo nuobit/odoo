@@ -2167,7 +2167,7 @@ msgstr ""
 #: code:addons/project/models/project.py:567
 #, python-format
 msgid "I take it"
-msgstr "Ik neem het"
+msgstr "Ik neem hem"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_id
@@ -2756,7 +2756,7 @@ msgstr ""
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "On invitation only"
-msgstr "Enkel via uitnodiging"
+msgstr "Alleen op uitnodiging"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3627,7 +3627,7 @@ msgid ""
 "There is no available image to be set as cover. Send a message on the task "
 "with an attached image."
 msgstr ""
-"Er is geen afbeelding beschikbaar om als omslag in te stellen. Verzend een "
+"Er is geen afbeelding beschikbaar om als cover in te stellen. Verzend een "
 "bericht op de taak met een afbeelding als bijlage."
 
 #. module: project
