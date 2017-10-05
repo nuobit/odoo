@@ -88,6 +88,29 @@ def _initialize_db(id, db_name, demo, lang, user_password, login='admin', countr
         _logger.exception('CREATE DATABASE failed:')
 
 def _create_empty_database(name):
+    wf = odoo.tools.config.get('webfaction', default=False)
+    if wf:
+        _logger.info("WebFaction: Creating database '%s'...", name)
+        db_base = odoo.tools.config["webfaction_db_base"]
+        db_user = odoo.tools.config["db_user"]
+        res = exec_webfaction_sql(db_base, db_user, "SELECT datname FROM pg_database WHERE datname = %s", (name,))
+        if res!=[]:
+            raise DatabaseExists("database %r already exists!" % (name,))
+
+        db_password = odoo.tools.config["db_password"]
+
+        import xmlrpclib
+        server = xmlrpclib.ServerProxy(odoo.tools.config['webfaction_url'])
+        session_id, _ = server.login(odoo.tools.config['webfaction_user'], odoo.tools.config['webfaction_password'])
+        dbus = [ y['username'] for y in filter(lambda x: x['db_type']=='postgresql', server.list_db_users(session_id))]
+
+        server.create_db(session_id, name, 'postgresql', db_password)
+        server.make_user_owner_of_db(session_id, db_user, name, 'postgresql')
+        if name not in dbus:
+            server.delete_db_user(session_id, name, 'postgresql')
+        _logger.info("WebFaction: Database '%s' created.", name)
+        return
+
     db = odoo.sql_db.db_connect('postgres')
     with closing(db.cursor()) as cr:
         chosen_template = odoo.tools.config['db_template']
@@ -109,6 +132,10 @@ def exp_create_database(db_name, demo, lang, user_password='admin', login='admin
 
 @check_db_management_enabled
 def exp_duplicate_database(db_original_name, db_name):
+    wf = odoo.tools.config.get('webfaction', default=False)
+    if wf:
+        raise Exception("A WebFaction database duplication is not yet implemented")
+
     _logger.info('Duplicate database `%s` to `%s`.', db_original_name, db_name)
     odoo.sql_db.close_db(db_original_name)
     db = odoo.sql_db.db_connect('postgres')
@@ -151,6 +178,16 @@ def exp_drop(db_name):
         return False
     odoo.modules.registry.Registry.delete(db_name)
     odoo.sql_db.close_db(db_name)
+
+    wf = odoo.tools.config.get('webfaction', default=False)
+    if wf:
+        _logger.info("WebFaction: Dropping database '%s'...", db_name)
+        import xmlrpclib
+        server = xmlrpclib.ServerProxy(odoo.tools.config['webfaction_url'])
+        session_id, _ = server.login(odoo.tools.config['webfaction_user'], odoo.tools.config['webfaction_password'])
+        server.delete_db(session_id, db_name, 'postgresql')
+        _logger.info("WebFaction: Database '%s' dropped.", db_name)
+        return True
 
     db = odoo.sql_db.db_connect('postgres')
     with closing(db.cursor()) as cr:
@@ -297,6 +334,10 @@ def restore_db(db, dump_file, copy=False):
 
 @check_db_management_enabled
 def exp_rename(old_name, new_name):
+    wf = odoo.tools.config.get('webfaction', default=False)
+    if wf:
+        raise Exception("A WebFaction database cannot be renamed. Not supported by Webfaction API")
+
     odoo.modules.registry.Registry.delete(old_name)
     odoo.sql_db.close_db(old_name)
 
@@ -358,6 +399,19 @@ def list_dbs(force=False):
 
     chosen_template = odoo.tools.config['db_template']
     templates_list = tuple(set(['postgres', chosen_template]))
+
+    wf = odoo.tools.config.get('webfaction', default=False)
+    if wf:
+        _logger.info("WebFaction: Listing databases (force=%s)..." % force)
+        db_base = odoo.tools.config["webfaction_db_base"]
+        templates_list = tuple(list(templates_list) + [db_base])
+        db_user = odoo.tools.config["db_user"]
+        res = exec_webfaction_sql(db_base, db_user, "select datname from pg_database where datdba=(select usesysid from pg_user where usename=%s) and datname not in %s order by datname", (db_user, templates_list))
+        res = [odoo.tools.ustr(name) for (name,) in res]
+        _logger.info("WebFaction: Database listing done. %s" % res)
+        res.sort()
+        return res
+
     db = odoo.sql_db.db_connect('postgres')
     with closing(db.cursor()) as cr:
         try:
