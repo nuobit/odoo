@@ -107,14 +107,15 @@ class MrpProduction(models.Model):
         copy=False, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, 
         domain=[('scrapped', '=', False)])
     finished_move_line_ids = fields.One2many(
-        'stock.move.line', compute='_compute_lines', inverse='_inverse_lines',
+        'stock.move.line', compute='_compute_lines', inverse='_inverse_lines', string="Finished Product"
         )
     workorder_ids = fields.One2many(
         'mrp.workorder', 'production_id', 'Work Orders',
         copy=False, oldname='workcenter_lines', readonly=True)
     workorder_count = fields.Integer('# Work Orders', compute='_compute_workorder_count')
     workorder_done_count = fields.Integer('# Done Work Orders', compute='_compute_workorder_done_count')
-    move_dest_ids = fields.One2many('stock.move', 'created_production_id')
+    move_dest_ids = fields.One2many('stock.move', 'created_production_id',
+        string="Stock Movements of Produced Goods")
 
     state = fields.Selection([
         ('confirmed', 'Confirmed'),
