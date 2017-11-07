@@ -5,6 +5,8 @@
 
 from openerp import models, fields, api, _
 from openerp.exceptions import Warning
+from datetime import datetime
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 import base64
 import StringIO
 import csv
@@ -32,7 +34,7 @@ class AccountFrFec(models.TransientModel):
         SELECT
             'OUV' AS JournalCode,
             'Balance initiale' AS JournalLib,
-            'Balance initiale PL' AS EcritureNum,
+            'OUVERTURE/' || %s AS EcritureNum,
             %s AS EcritureDate,
             '120/129' AS CompteNum,
             'Benefice (perte) reporte(e)' AS CompteLib,
@@ -66,8 +68,10 @@ class AccountFrFec(models.TransientModel):
             '''
         company = self.env.user.company_id
         formatted_date_from = self.date_from.replace('-', '')
+        date_from = datetime.strptime(self.date_from, DEFAULT_SERVER_DATE_FORMAT)
+        formatted_date_year = date_from.year
         self._cr.execute(
-            sql_query, (formatted_date_from, formatted_date_from, formatted_date_from, self.date_from, company.id))
+            sql_query, (formatted_date_year, formatted_date_from, formatted_date_from, formatted_date_from, self.date_from, company.id))
         listrow = []
         row = self._cr.fetchone()
         listrow = list(row)
@@ -129,7 +133,7 @@ class AccountFrFec(models.TransientModel):
         SELECT
             'OUV' AS JournalCode,
             'Balance initiale' AS JournalLib,
-            'Balance initiale ' || MIN(aa.name) AS EcritureNum,
+            'OUVERTURE/' || %s AS EcritureNum,
             %s AS EcritureDate,
             MIN(aa.code) AS CompteNum,
             replace(MIN(aa.name), '|', '/') AS CompteLib,
@@ -169,8 +173,10 @@ class AccountFrFec(models.TransientModel):
         HAVING sum(aml.balance) != 0
         '''
         formatted_date_from = self.date_from.replace('-', '')
+        date_from = datetime.strptime(self.date_from, DEFAULT_SERVER_DATE_FORMAT)
+        formatted_date_year = date_from.year
         self._cr.execute(
-            sql_query, (formatted_date_from, formatted_date_from, formatted_date_from, self.date_from, company.id))
+            sql_query, (formatted_date_year, formatted_date_from, formatted_date_from, formatted_date_from, self.date_from, company.id))
 
         for row in self._cr.fetchall():
             listrow = list(row)
@@ -184,14 +190,17 @@ class AccountFrFec(models.TransientModel):
                     unaffected_earnings_amount = float(unaffected_earnings_results[11].replace(',', '.')) - float(unaffected_earnings_results[12].replace(',', '.'))
                     listrow_amount = current_amount + unaffected_earnings_amount
                     if listrow_amount > 0:
-                        listrow[11] = str(listrow_amount)
-                        listrow[12] = '0.00'
+                        listrow[11] = str(listrow_amount).replace('.', ',')
+                        listrow[12] = '0,00'
                     else:
-                        listrow[11] = '0.00'
-                        listrow[12] = str(listrow_amount)
+                        listrow[11] = '0,00'
+                        listrow[12] = str(-listrow_amount).replace('.', ',')
             w.writerow([s.encode("utf-8") for s in listrow])
         #if the unaffected earnings account wasn't in the selection yet: add it manually
-        if not unaffected_earnings_line and unaffected_earnings_results and unaffected_earnings_results[11] != '0,00' and unaffected_earnings_results[12] != '0,00':
+        if (not unaffected_earnings_line
+            and unaffected_earnings_results
+            and (unaffected_earnings_results[11] != '0,00'
+                 or unaffected_earnings_results[12] != '0,00')):
             #search an unaffected earnings account
             unaffected_earnings_account = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_unaffected_earnings').id)], limit=1)
             if unaffected_earnings_account:
