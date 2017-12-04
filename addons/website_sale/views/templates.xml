@@ -1155,7 +1155,9 @@
                                 <t t-if="mode == ('new', 'billing')">
                                     <h3 class="page-header mt16">Your Address
                                         <small> or </small>
-                                        <t t-set='connect' t-value="request.env['ir.config_parameter'].sudo().get_param('auth_signup.allow_uninvited') == 'True' and ('signup', 'Sign Up') or ('login', 'Log In')"/>
+                                        <t t-set="signup_text">Sign Up</t>
+                                        <t t-set="login_text">Log In</t>
+                                        <t t-set='connect' t-value="request.env['ir.config_parameter'].sudo().get_param('auth_signup.allow_uninvited') == 'True' and ('signup', signup_text) or ('login', login_text)"/>
                                         <a t-attf-href='/web/{{connect[0]}}?redirect=/shop/checkout' class='btn btn-primary' style="margin-top: -11px"><t t-esc='connect[1]'/></a>
                                     </h3>
                                 </t>
@@ -1431,7 +1433,7 @@
                     <t t-call="website_sale.wizard_checkout">
                         <t t-set="step" t-value="50" />
                     </t>
-                    <h1 class="mb32">Order <em t-field="order.name" /> Confirmed</h1>
+                    <h1 class="mb32">Order <em t-field="order.name" /></h1>
                     <div class="row">
                         <div class="col-lg-8 col-sm-9">
                             <div class="thanks_msg">
