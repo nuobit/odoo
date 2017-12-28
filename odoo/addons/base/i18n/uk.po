@@ -15339,6 +15339,8 @@ msgid ""
 "Set the font into the report header, it will be used as default font in the "
 "RML reports of the user company"
 msgstr ""
+"Встановіть шрифт у заголовок звіту, він буде використовуватися як шрифт за "
+"замовчуванням у звітах RML компанії користувача"
 
 #. module: base
 #: code:addons/base/res/res_users.py:524
@@ -16211,6 +16213,12 @@ msgstr "Таїланд - Бухоблік"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_th_reports
 msgid "Thailand - Accounting Reports"
+msgstr ""
+
+#. module: base
+#: code:addons/base/res/res_users.py:288
+#, python-format
+msgid "The \"App Switcher\" action cannot be selected as home action."
 msgstr ""
 
 #. module: base
