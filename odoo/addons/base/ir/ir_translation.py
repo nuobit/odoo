@@ -161,12 +161,14 @@ class IrTranslationImport(object):
 
         # Step 3: insert new translations
         cr.execute(""" INSERT INTO %(_model_table)s(name, lang, res_id, src, type, value, module, state, comments)
-                       SELECT name, lang, res_id, src, type, value, module, state, comments
+                       SELECT DISTINCT ON (type, name, lang, res_id, md5(src))
+                              name, lang, res_id, src, type, value, module, state, comments
                        FROM %(_table)s AS ti
                        WHERE NOT EXISTS(SELECT 1 FROM ONLY %(_model_table)s AS irt WHERE %(find_expr)s) AND
-                             NOT EXISTS(SELECT 1 FROM %(_model_table)s AS tj
-                                        WHERE (ti.type, ti.name, ti.lang, ti.res_id, md5(ti.src)) =
-                                                  (tj.type, tj.name, tj.lang, tj.res_id, md5(tj.src)));
+                             NOT EXISTS(SELECT 1 FROM ONLY %(_model_table)s AS irt
+                                        WHERE (irt.type, irt.name, irt.lang, irt.res_id, md5(irt.src)) =
+                                              (ti.type, ti.name, ti.lang, ti.res_id, md5(ti.src)))
+                       ORDER BY type, name, lang, res_id, md5(src), id DESC;
                    """ % dict(_model_table=self._model_table, _table=self._table, find_expr=find_expr),
                    (tuple(src_relevant_fields), tuple(src_relevant_fields)))
 
