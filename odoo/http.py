@@ -57,7 +57,7 @@ rpc_request = logging.getLogger(__name__ + '.rpc.request')
 rpc_response = logging.getLogger(__name__ + '.rpc.response')
 
 # 1 week cache for statics as advised by Google Page Speed
-STATIC_CACHE = 60 * 60 * 24 * 7
+STATIC_CACHE = 60 * 60 * 24
 
 #----------------------------------------------------------
 # RequestHandler
