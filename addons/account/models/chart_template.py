@@ -1206,7 +1206,8 @@ class AccountTaxTemplate(models.Model):
             # create taxes in batch
             tax_template_vals = []
             for template in templates:
-                if all(child.id in tax_template_to_tax for child in template.children_tax_ids):
+                #if all(child.id in tax_template_to_tax for child in template.children_tax_ids):
+                if True:
                     if accounts_exist:
                         vals = template._get_tax_vals_complete(company, tax_template_to_tax)
                     else:
