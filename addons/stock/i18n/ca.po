@@ -207,7 +207,7 @@ msgstr "'comtat Full'"
 msgid ""
 "'Delivery Slip - %s - %s' % (object.partner_id.name or '', object.name)"
 msgstr ""
-"'Albarà d'entrega - %s - %s' % (object.partner_id.name or '', object.name)"
+"'Albarà d\'entrega - %s - %s' % (object.partner_id.name or '', object.name)"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_location_barcode
@@ -222,7 +222,7 @@ msgstr "'Lot-Núm.Sèrie - %s' % object.name"
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_picking_type_label
 msgid "'Operation-type - %s' % object.name"
-msgstr "'Tipus d'operació - %s' % object.name"
+msgstr "'Tipus d\'operació - %s' % object.name"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_picking_packages
