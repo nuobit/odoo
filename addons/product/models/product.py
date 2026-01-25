@@ -261,7 +261,10 @@ class ProductProduct(models.Model):
 
     def _set_product_price(self):
         for product in self:
-            if self._context.get('uom'):
+            if (
+                self._context.get('uom')
+                and 'default_description_sale' not in self._context
+            ):
                 value = self.env['uom.uom'].browse(self._context['uom'])._compute_price(product.price, product.uom_id)
             else:
                 value = product.price
@@ -270,7 +273,10 @@ class ProductProduct(models.Model):
 
     def _set_product_lst_price(self):
         for product in self:
-            if self._context.get('uom'):
+            if (
+                self._context.get('uom')
+                and 'default_description_sale' not in self._context
+            ):
                 value = self.env['uom.uom'].browse(self._context['uom'])._compute_price(product.lst_price, product.uom_id)
             else:
                 value = product.lst_price
@@ -285,7 +291,10 @@ class ProductProduct(models.Model):
     @api.depends_context('uom')
     def _compute_product_lst_price(self):
         to_uom = None
-        if 'uom' in self._context:
+        if (
+            'uom' in self._context
+            and 'default_description_sale' not in self._context
+        ):
             to_uom = self.env['uom.uom'].browse(self._context['uom'])
 
         for product in self:
