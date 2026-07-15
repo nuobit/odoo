@@ -553,9 +553,13 @@ actual arch.
         return res
 
     def unlink(self):
-        # if in uninstall mode and has children views, emulate an ondelete cascade
-        if self.env.context.get('_force_unlink', False) and self.inherit_children_ids:
-            self.inherit_children_ids.unlink()
+        # if in uninstall mode and has children views, emulate an ondelete cascade;
+        # inactive children are hidden by active_test but still hold the inherit_id
+        # RESTRICT foreign key, which would leave this view orphaned
+        if self.env.context.get('_force_unlink', False):
+            children = self.with_context(active_test=False).inherit_children_ids
+            if children:
+                children.unlink()
         self.env.registry.clear_cache('templates')
         return super(View, self).unlink()
 
