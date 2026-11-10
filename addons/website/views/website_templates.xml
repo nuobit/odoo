@@ -340,7 +340,7 @@
 
 <!-- Navbar -->
 <template id="navbar_toggler" name="Navbar Toggler">
-    <button type="button" t-attf-class="navbar-toggler #{_toggler_class} o_not_editable" data-bs-toggle="offcanvas" data-bs-target="#top_menu_collapse" aria-controls="top_menu_collapse">
+    <button type="button" t-attf-class="navbar-toggler #{_toggler_class} o_not_editable" data-bs-toggle="offcanvas" data-bs-target="#top_menu_collapse" aria-controls="top_menu_collapse" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon o_not_editable"/>
     </button>
 </template>
@@ -385,7 +385,7 @@
                     </button>
                 </li>
             </ul>
-            <div t-attf-class="offcanvas #{_side if _side else 'offcanvas-end'} o_navbar_mobile" id="top_menu_collapse_mobile">
+            <div t-attf-class="offcanvas #{_side if _side else 'offcanvas-end'} o_navbar_mobile" id="top_menu_collapse_mobile" aria-label="Main Menu">
                 <div class="offcanvas-header justify-content-end o_not_editable">
                     <button type="button" class="nav-link btn-close" data-bs-dismiss="offcanvas" aria-label="Close"/>
                 </div>
@@ -593,7 +593,7 @@
                         <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end"/>
                     </t>
                 </ul>
-                <div class="offcanvas offcanvas-start o_navbar_mobile" id="top_menu_collapse">
+                <div class="offcanvas offcanvas-start o_navbar_mobile" id="top_menu_collapse" aria-label="Main Menu">
                     <div class="offcanvas-header justify-content-end">
                         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"/>
                     </div>
