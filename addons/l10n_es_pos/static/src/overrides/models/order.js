@@ -22,6 +22,22 @@ patch(Order.prototype, {
             this.partner = null;
         }
     },
+    init_from_JSON(json) {
+        super.init_from_JSON(...arguments);
+        if (this.pos.config.is_spanish) {
+            this.is_l10n_es_simplified_invoice = json.is_l10n_es_simplified_invoice;
+            this.invoice_name = json.invoice_name;
+            if (
+                this.is_l10n_es_simplified_invoice &&
+                !["paid", "done", "invoiced"].includes(json.state)
+            ) {
+                // a validation cut short (a reload while it waited)
+                this.giveBackSimplifiedInvoice(
+                    this.pos.db.partner_by_id[this.pos.config.simplified_partner_id?.[0]]
+                );
+            }
+        }
+    },
     export_as_JSON() {
         const json = super.export_as_JSON(...arguments);
         if (this.pos.config.is_spanish) {

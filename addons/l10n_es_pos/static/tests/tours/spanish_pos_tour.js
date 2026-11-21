@@ -6,6 +6,7 @@ import * as ReceiptScreen from "@point_of_sale/../tests/tours/helpers/ReceiptScr
 import * as PaymentScreen from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
 import * as PartnerListScreen from "@point_of_sale/../tests/tours/helpers/PartnerListScreenTourMethods";
 import * as Chrome from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
+import * as TicketScreen from "@point_of_sale/../tests/tours/helpers/TicketScreenTourMethods";
 import * as Utils from "@point_of_sale/../tests/tours/helpers/utils";
 import { registry } from "@web/core/registry";
 import { checkSimplifiedInvoiceNumber, pay } from "./helpers/receipt_helpers";
@@ -180,6 +181,40 @@ registry.category("web_tour.tours").add("spanish_pos_tour", {
         ...checkSimplifiedInvoiceNumber("0006"),
         ...ReceiptScreen.clickNextOrder(),
 
+        {
+            content: "an order read back with a validation cut short by a reload gives it back",
+            trigger: ".product-screen",
+            run: () => {
+                const order = posmodel.get_order();
+                order.is_l10n_es_simplified_invoice = true;
+                order.to_invoice = true;
+                order.partner = posmodel.db.partner_by_id[posmodel.config.simplified_partner_id[0]];
+                const readBack = posmodel.createReactiveOrder(order.export_as_JSON());
+                if (
+                    readBack.to_invoice ||
+                    readBack.is_l10n_es_simplified_invoice ||
+                    readBack.partner
+                ) {
+                    throw new Error("the simplified invoice was not given back");
+                }
+                order.partner = Object.values(posmodel.db.partner_by_id).find(
+                    (partner) => partner.name === "Partner Full"
+                );
+                const withCustomer = posmodel.createReactiveOrder(order.export_as_JSON());
+                if (withCustomer.partner?.id !== order.partner.id) {
+                    throw new Error("the customer picked was given back too");
+                }
+                order.is_l10n_es_simplified_invoice = false;
+                order.to_invoice = false;
+                order.partner = null;
+            },
+        },
+        ...Chrome.clickMenuButton(),
+        ...Chrome.clickTicketButton(),
+        ...TicketScreen.selectFilter("Paid"),
+        ...TicketScreen.selectOrder("-0001"),
+        ...TicketScreen.clickControlButton("Print Receipt"),
+        ...checkSimplifiedInvoiceNumber("0001"),
     ],
 });
 
