@@ -181,6 +181,33 @@ registry.category("web_tour.tours").add("spanish_pos_tour", {
         ...checkSimplifiedInvoiceNumber("0006"),
         ...ReceiptScreen.clickNextOrder(),
 
+        ...ProductScreen.addOrderline("Desk Pad", "1"),
+        ...ProductScreen.clickPayButton(),
+        {
+            content: "validate before choosing a payment method",
+            trigger: ".payment-screen .button.next.validation",
+            mobile: false,
+        },
+        {
+            content: "the validation is refused: no payment method yet",
+            trigger: ".o_notification:contains('Select a payment method')",
+            isCheck: true,
+        },
+        ...PaymentScreen.clickPaymentMethod("Bank"),
+        ...PaymentScreen.clickShipLaterButton(),
+        ...PaymentScreen.shippingLaterHighlighted(),
+        ...PaymentScreen.clickValidate(),
+        {
+            content: "an order shipped later needs its customer: Odoo asks for it",
+            trigger: "div.popup.popup-confirm .modal-header:contains('Please select the Customer')",
+            isCheck: true,
+        },
+        ...Chrome.confirmPopup(),
+        ...PartnerListScreen.clickPartner("Partner Full"),
+        ...PaymentScreen.clickValidate(),
+        ...checkSimplifiedInvoiceNumber("0007"),
+        ...ReceiptScreen.clickNextOrder(),
+
         {
             content: "an order read back with a validation cut short by a reload gives it back",
             trigger: ".product-screen",

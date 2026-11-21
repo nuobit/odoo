@@ -8,6 +8,7 @@ import { toRaw } from "@odoo/owl";
 patch(PaymentScreen.prototype, {
     async validateOrder(isForceValidate) {
         const order = this.currentOrder;
+        let genericPartner;
         if (this.pos.config.is_spanish && !this.skipAutomaticInvoicing()) {
             order.is_l10n_es_simplified_invoice = order.canBeSimplifiedInvoiced() && !order.to_invoice;
             if (!order.is_l10n_es_simplified_invoice && !order.to_invoice) {
@@ -22,8 +23,10 @@ patch(PaymentScreen.prototype, {
                     return false;
                 }
                 order.to_invoice = Boolean(this.pos.config.l10n_es_simplified_invoice_journal_id);
-                if (order.to_invoice) {
-                    order.partner = order.partner || this.pos.db.partner_by_id[this.pos.config.simplified_partner_id[0]];
+                // an order shipped later goes to its customer, whom Odoo asks for
+                if (order.to_invoice && !order.getShippingDate() && !order.partner) {
+                    genericPartner = this.pos.db.partner_by_id[this.pos.config.simplified_partner_id[0]];
+                    order.partner = genericPartner;
                 }
             }
         }
@@ -35,7 +38,7 @@ patch(PaymentScreen.prototype, {
             const left = !this.pos.get_order_list().some((other) => toRaw(other) === toRaw(order));
             if (order.is_l10n_es_simplified_invoice && !order.finalized && !left) {
                 // refused, by a check or by the server (an error)
-                order.giveBackSimplifiedInvoice();
+                order.giveBackSimplifiedInvoice(genericPartner);
             }
         }
     },
