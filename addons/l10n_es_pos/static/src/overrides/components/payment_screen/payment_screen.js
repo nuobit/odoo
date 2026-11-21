@@ -3,11 +3,12 @@ import { _t } from "@web/core/l10n/translation";
 import {patch} from "@web/core/utils/patch";
 import {ErrorPopup} from "@point_of_sale/app/errors/popups/error_popup";
 import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
+import { toRaw } from "@odoo/owl";
 
 patch(PaymentScreen.prototype, {
     async validateOrder(isForceValidate) {
+        const order = this.currentOrder;
         if (this.pos.config.is_spanish && !this.skipAutomaticInvoicing()) {
-            const order = this.currentOrder;
             order.is_l10n_es_simplified_invoice = order.canBeSimplifiedInvoiced() && !order.to_invoice;
             if (!order.is_l10n_es_simplified_invoice && !order.to_invoice) {
                 this.popup.add(ErrorPopup, {
@@ -17,16 +18,26 @@ patch(PaymentScreen.prototype, {
                 return false;
             }
             if (order.is_l10n_es_simplified_invoice) {
-                order.to_invoice = Boolean(this.pos.config.l10n_es_simplified_invoice_journal_id)
                 if (await this._askForCustomerIfRequired() === false) {
                     return false;
                 }
+                order.to_invoice = Boolean(this.pos.config.l10n_es_simplified_invoice_journal_id);
                 if (order.to_invoice) {
                     order.partner = order.partner || this.pos.db.partner_by_id[this.pos.config.simplified_partner_id[0]];
                 }
             }
         }
-        return await super.validateOrder(...arguments);
+        try {
+            return await super.validateOrder(...arguments);
+        } finally {
+            // an order paid online left the point of sale, replaced by the one the server
+            // sends: nothing is left to give back, and a write would store it again as unpaid
+            const left = !this.pos.get_order_list().some((other) => toRaw(other) === toRaw(order));
+            if (order.is_l10n_es_simplified_invoice && !order.finalized && !left) {
+                // refused, by a check or by the server (an error)
+                order.giveBackSimplifiedInvoice();
+            }
+        }
     },
     skipAutomaticInvoicing() {
         const order = this.currentOrder;
