@@ -21,6 +21,14 @@ class PosOrder(models.Model):
             res.update({"is_l10n_es_simplified_invoice": ui_order["is_l10n_es_simplified_invoice"]})
         return res
 
+    def _export_for_ui(self, order):
+        result = super()._export_for_ui(order)
+        result.update({
+            "is_l10n_es_simplified_invoice": order.is_l10n_es_simplified_invoice,
+            "invoice_name": order.account_move.name or "",
+        })
+        return result
+
     def _generate_pos_order_invoice(self):
         # Extend 'point_of_sale'
         # Add the simplified partner in case we do a simplified invoice and no partner is set
